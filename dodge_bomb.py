@@ -2,27 +2,51 @@ import os
 import sys
 import random
 import pygame as pg
-
+import time
 
 WIDTH, HEIGHT = 1100, 650
 DELTA = {  #じしょ
     pg.K_UP: (0,-5),
-    pg.K_UP: (0,+5),
-    pg.K_UP: (-5,0),
-    pg.K_UP: (+5,0),
+    pg.K_DOWN: (0,+5),
+    pg.K_LEFT: (-5,0),
+    pg.K_RIGHT: (+5,0),
          }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+def gameover(screen: pg.Surface) -> None: #ゲームオーバー画面の関数
+    # bs_img = pg.display.set_mode((WIDTH, HEIGHT))
+    bb = pg.Surface((WIDTH, HEIGHT))
+    pg.draw.rect(bb, (0,0,0),pg.Rect(0,0,WIDTH,HEIGHT))
+    bb.set_alpha(200)
+    
+    screen.blit(bb, [0,0])
+    img = pg.image.load("fig/8.png") #画像の読み込み
+    fonto = pg.font.Font(None,80)
+    txt = fonto.render("game over", 
+                       True,(255,255,255)) #テキストの設定
+    t_rct = txt.get_rect()
+    t_rct.center = WIDTH/2, HEIGHT/2 #テキストの位置決め
+    screen.blit(txt,t_rct)
 
+    img_rct = img.get_rect()
+    img_rct.center = WIDTH/2+200, HEIGHT/2 #左にずらしたこうかとんの画像
+    screen.blit(img,img_rct)
+
+
+    img_rct.center = WIDTH/2-200, HEIGHT/2 #右にずらしたこうかとんの画像
+    screen.blit(img,img_rct)
+    pg.display.update()
+    time.sleep(5) #五秒待機
+    return
 def check_bound(rct:pg.rect) -> tuple[bool, bool]:
     """
     
     """
 
     yoko, tate = True, True
-    if rct.left < 0 or WIDTH < rct.light:
+    if rct.left < 0 or WIDTH < rct.right:
         yoko = False
-    if rct.left < 0 or WIDTH < rct.bottom:
+    if rct.top < 0 or HEIGHT < rct.bottom:
         tate = False
     return yoko, tate
 
@@ -49,8 +73,8 @@ def main():
             if event.type == pg.QUIT: 
                 return
             
-        if kk_rct.colliderect(bb_rct):　#こうかとんと爆弾の衝突判定
-            print("ゲームオーバー")
+        if kk_rct.colliderect(bb_rct): #こうかとんと爆弾の衝突判定
+            gameover(screen) #ゲームオーバー関数呼び出し
             return #ゲームオーバーで強制終了
         screen.blit(bg_img, [0, 0]) 
 
@@ -65,7 +89,7 @@ def main():
         #if key_lst[pg.K_RIGHT]:
          #   sum_mv[0] += 5
 
-        for key,mv in DELYA.items():
+        for key,mv in DELTA.items():
             if key_lst[key]:
                 sum_mv[0] += mv[0]
                 sum_mv[1] += mv[1]
