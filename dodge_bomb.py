@@ -49,9 +49,9 @@ def main():
             if event.type == pg.QUIT: 
                 return
             
-        #if kk_rct.colliderect(bb_rct):　#こうかとんと爆弾の衝突判定
-         #   print("ゲームオーバー")
-          #  return #ゲームオーバーで強制終了
+        if kk_rct.colliderect(bb_rct):　#こうかとんと爆弾の衝突判定
+            print("ゲームオーバー")
+            return #ゲームオーバーで強制終了
         screen.blit(bg_img, [0, 0]) 
 
         key_lst = pg.key.get_pressed()
