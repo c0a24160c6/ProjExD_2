@@ -4,6 +4,7 @@ import random
 import pygame as pg
 import time
 
+
 WIDTH, HEIGHT = 1100, 650
 DELTA = {  #じしょ
     pg.K_UP: (0,-5),
@@ -12,6 +13,20 @@ DELTA = {  #じしょ
     pg.K_RIGHT: (+5,0),
          }
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+tmr = 0
+bb_imgs = pg.Surface((20, 20))
+def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    for r in range(1,11):
+        bb_img = pg.Surface((20*r,20*r))
+        bb_imgs = pg.Surface((20, 20))
+        bb_rct = bb_img,get_rect()
+        pg.draw.circle(bb_img,(255, 0, 0), (10*r, 10*r), 10*r)
+        bb_imgs.append(bb_img)
+        bb_accs = [a for a in range(1, 11)]
+        avx = vx*bb_accs[min(tmr//500, 9)]
+        bb_img = bb_imgs[min(tmr//500,9)]
+        bb_rct.width = bb_img.get_rect().width
 
 def gameover(screen: pg.Surface) -> None: #ゲームオーバー画面の関数
     # bs_img = pg.display.set_mode((WIDTH, HEIGHT))
@@ -38,6 +53,8 @@ def gameover(screen: pg.Surface) -> None: #ゲームオーバー画面の関数
     pg.display.update()
     time.sleep(5) #五秒待機
     return
+
+
 def check_bound(rct:pg.rect) -> tuple[bool, bool]:
     """
     
@@ -72,6 +89,8 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
+            
+        #init_bb_imgs(list, list)
             
         if kk_rct.colliderect(bb_rct): #こうかとんと爆弾の衝突判定
             gameover(screen) #ゲームオーバー関数呼び出し
