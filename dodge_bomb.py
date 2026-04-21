@@ -52,7 +52,6 @@ def gameover(screen: pg.Surface) -> None: #ゲームオーバー画面の関数
     screen.blit(img,img_rct)
     pg.display.update()
     time.sleep(5) #五秒待機
-    return
 
 
 def check_bound(rct:pg.rect) -> tuple[bool, bool]:
